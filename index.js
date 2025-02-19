@@ -1,40 +1,40 @@
+const express = require('express');
+const TelegramBot = require('node-telegram-bot-api');
 
-const express = require("express");
-const TelegramBot = require("node-telegram-bot-api");
+// Token bot Telegram Anda
+const TOKEN = 'YOUR_BOT_TOKEN_HERE';
 
+// Buat instance bot
+const bot = new TelegramBot(TOKEN, { polling: false });
+
+// Buat instance Express
 const app = express();
-const port = process.env.PORT || 8080;
-const bot = new TelegramBot("7908620487:AAF4g43C8WDQ_MPr2Eo9Dg2XYusyQbvMS6U", { polling: false });
 
+// Middleware untuk parsing JSON
 app.use(express.json());
 
-// Event saat bot menerima pesan
-bot.on("message", (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, `Halo, ${msg.from.chat.id}! Anda mengirim: ${msg.text} `);
-});
+// Endpoint untuk webhook
+app.post('/webhook', (req, res) => {
+  const { message } = req.body;
 
-// Endpoint untuk mengirim pesan ke chat tertentu
-app.post("/send-message", async (req, res) => {
-    const { chatId, text } = req.body;
-    if (!chatId || !text) {
-        return res.status(400).json({ error: "chatId dan text diperlukan" });
+  // Tangani pesan
+  if (message && message.text) {
+    const chatId = message.chat.id;
+    const text = message.text;
+
+    // Balas pesan
+    if (text === '/start') {
+      bot.sendMessage(chatId, 'Halo! Saya bot Telegram Anda.');
+    } else {
+      bot.sendMessage(chatId, `Anda mengatakan: ${text}`);
     }
+  }
 
-    try {
-        await bot.sendMessage(chatId, text);
-        res.json({ success: true, message: "Pesan berhasil dikirim" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+  res.sendStatus(200);
 });
 
-// Endpoint root
-app.get("/", (req, res) => {
-    res.send("Bot Telegram dengan Express berjalan!");
-});
-
-// Jalankan server Express
-app.listen(port, () => {
-    console.log(`Server berjalan di http://localhost:${port}`);
+// Jalankan server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server berjalan di port ${PORT}`);
 });
