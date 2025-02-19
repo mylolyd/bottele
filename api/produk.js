@@ -1,21 +1,14 @@
-const express = require("express");
-const router = express.Router();
+// request.js
+const axios = require('axios');
 
-/**
- * GET product list.
- *
- * @return product list | empty.
- */
-router.get("/", async (req, res) => {
+async function ambilData() {
   try {
-    res.json({
-      status: 200,
-      message: "Get data has successfully",
-    });
+    const response = await axios.get('https://api.coindesk.com/v1/bpi/currentprice.json');
+    console.log('Harga Bitcoin:', response.data.bpi.USD.rate, 'USD');
   } catch (error) {
-    console.error(error);
-    return res.status(500).send("Server error");
+    console.error('Gagal mengambil data:', error.message);
   }
-});
+}
 
-module.exports = router;
+// Jalankan setiap 10 detik
+setInterval(ambilData, 10000);
