@@ -11,4 +11,4 @@ async function ambilData() {
 }
 
 // Jalankan setiap 10 detik
-setInterval(ambilData, 10000);
+setInterval(ambilData, 60000);
