@@ -1,14 +1,14 @@
 // request.js
-const axios = require('axios');
+const express = require('express');
 
-async function ambilData() {
-  try {
-    const response = await axios.get('https://api.coindesk.com/v1/bpi/currentprice.json');
-    console.log('Harga Bitcoin:', response.data.bpi.USD.rate, 'USD');
-  } catch (error) {
-    console.error('Gagal mengambil data:', error.message);
-  }
-}
+const app = express();
+app.use(express.json()); // Middleware untuk membaca JSON
 
-// Jalankan setiap 10 detik
-setInterval(ambilData, 60000);
+app.post('/api/webhook', (req, res) => {
+  console.log('Webhook diterima:', req.body);
+  
+  // Kirim respons ke server pengirim
+  res.status(200).json({ message: 'Webhook diterima' });
+});
+
+module.exports = app;
