@@ -2,7 +2,7 @@ const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 
 // Token bot Telegram Anda
-const TOKEN = 'YOUR_BOT_TOKEN_HERE';
+const TOKEN = '7908620487:AAF4g43C8WDQ_MPr2Eo9Dg2XYusyQbvMS6U';
 
 // Buat instance bot
 const bot = new TelegramBot(TOKEN, { polling: false });
